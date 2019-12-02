@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+echo ${HOME}
 
 docker build -t gcr.io/${PROJECT_NAME_PRD}/${DOCKER_IMAGE_NAME}:$TRAVIS_COMMIT .
 
@@ -25,7 +26,7 @@ gcloud container clusters create ${CLUSTER_NAME_PRD} \
   --zone ${CLOUDSDK_COMPUTE_ZONE}
 
 ## kubectl set image deployment/${KUBE_DEPLOYMENT_NAME} ${KUBE_DEPLOYMENT_CONTAINER_NAME}=gcr.io/${PROJECT_NAME_PRD}/${DOCKER_IMAGE_NAME}:$TRAVIS_COMMIT
-
+echo "start deployment.yaml"
 kubectl apply -f deployment.yaml
 kubectl apply -f loadbalancer.yaml
 kubectl apply -f nodeport.yaml
