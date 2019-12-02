@@ -5,8 +5,8 @@ echo ${HOME}
 
 docker build -t gcr.io/${PROJECT_NAME_PRD}/${DOCKER_IMAGE_NAME}:$TRAVIS_COMMIT .
 
-echo $GCLOUD_SERVICE_KEY_PRD | base64 --decode -i > GOOGLE_APPLICATION_CREDENTIALS
-gcloud auth activate-service-account --key-file GOOGLE_APPLICATION_CREDENTIALS
+echo $GCLOUD_SERVICE_KEY_PRD | base64 --decode -i > ${GOOGLE_APPLICATION_CREDENTIALS}
+gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
 
 gcloud --quiet config set project $PROJECT_NAME_PRD
 gcloud --quiet config set container/cluster $CLUSTER_NAME_PRD

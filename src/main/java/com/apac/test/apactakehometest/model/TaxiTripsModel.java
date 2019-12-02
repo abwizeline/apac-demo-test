@@ -13,8 +13,8 @@ public class TaxiTripsModel extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "TaxiID")
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
+    @JoinColumn(name = "TaxiID", referencedColumnName = "id")
     TaxiModel taxiModel;
 
     @NotNull(message = "Please enter pick up time")
