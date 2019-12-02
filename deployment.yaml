@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: apac-demo
-          image: gcr.io/apactestdeploy/apac-demo:v1
+          image: gcr.io/apactestdeploy/apac-demo:latest
           ports:
             - containerPort: 8080
       # secrets to pull the image docker hub registry to GCP, we need to create secrets beforehand
