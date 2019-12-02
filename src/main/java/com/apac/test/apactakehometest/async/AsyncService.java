@@ -107,7 +107,7 @@ public class AsyncService {
         TaxiTripsModel taxiTripsModel = new TaxiTripsModel();
 
         long taxiId = Long.parseLong(dataArray[0]);
-        //taxiTripsModel.setTaxiModel(taxiRepository.findById(taxiId).orElse(new TaxiModel(taxiId)));
+        // taxiTripsModel.setTaxiModel(taxiRepository.findById(taxiId).orElse(new TaxiModel(taxiId)));
 
         long vendorId = Long.parseLong(dataArray[1]);
         //taxiTripsModel.setVendorModel(vendorRepository.findById(vendorId).orElse(new VendorModel(vendorId)));

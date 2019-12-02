@@ -16,7 +16,7 @@ services:
 # Set env vars
 env:
   global:
-    - GOOGLE_APPLICATION_CREDENTIALS=~/gcloud-service-key.json
+    - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/gcloud-service-key.json
     - PROJECT_NAME_PRD=apactestdeploy
     - CLUSTER_NAME_PRD=apac-demo-cluster
     - CLOUDSDK_COMPUTE_ZONE=us-central1-b
