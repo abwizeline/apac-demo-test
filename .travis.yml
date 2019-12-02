@@ -23,8 +23,8 @@ env:
     - DOCKER_IMAGE_NAME=apac-demo
     - KUBE_DEPLOYMENT_NAME=apac-demo
     - KUBE_DEPLOYMENT_CONTAINER_NAME=apac-demo
-    - NODES_NUM = 3
-    - GCLOUD_MACHINE_TYPE = n1-standard-1
+    - NODES_NUM=3
+    - GCLOUD_MACHINE_TYPE=n1-standard-1
 
 before_deploy:
   - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
