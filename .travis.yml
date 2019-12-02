@@ -35,7 +35,7 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: "./deploy-production.sh"
+    script: chmod +x deploy-production.sh && ./deploy-production.sh
     skip_cleanup: true
     on:
       branch: master
