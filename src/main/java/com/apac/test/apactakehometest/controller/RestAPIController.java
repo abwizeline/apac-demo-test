@@ -2,11 +2,13 @@ package com.apac.test.apactakehometest.controller;
 
 import com.apac.test.apactakehometest.async.AsyncService;
 import com.apac.test.apactakehometest.model.PaymentTypeModel;
+import com.apac.test.apactakehometest.model.TaxiModel;
 import com.apac.test.apactakehometest.model.TaxiTripsModel;
 import com.apac.test.apactakehometest.model.VendorModel;
 import com.apac.test.apactakehometest.model.rest.ApiResponse;
 import com.apac.test.apactakehometest.model.rest.CSVRestBodyModel;
 import com.apac.test.apactakehometest.repository.PaymentTypeRepository;
+import com.apac.test.apactakehometest.repository.TaxiRepository;
 import com.apac.test.apactakehometest.repository.TaxiTripsRepository;
 import com.apac.test.apactakehometest.repository.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -36,17 +37,22 @@ public class RestAPIController {
     VendorRepository vendorRepository;
     @Autowired
     PaymentTypeRepository paymentTypeRepository;
+    @Autowired
+    TaxiRepository taxiRepository;
 
 
     @PostMapping("test")
     public ResponseEntity<?> test() {
 
-        TaxiTripsModel taxiTripsModel = new TaxiTripsModel();
-        taxiTripsModel.setLpep_pickup_datetime("");
-        taxiTripsModel.setVendorModel(vendorRepository.findById(1L).orElse(new VendorModel(1L)));
-        taxiTripsModel.setPaymentTypeModel(paymentTypeRepository.findById(1L).orElse(new PaymentTypeModel(1L)));
+        for(int i = 0; i< 20; i++) {
+            TaxiTripsModel taxiTripsModel = new TaxiTripsModel();
+            taxiTripsModel.setLpep_pickup_datetime("");
+            taxiTripsModel.setTaxiModel(taxiRepository.findById(1L).orElse(new TaxiModel(1L)));
+            taxiTripsModel.setVendorModel(vendorRepository.findById(1L).orElse(new VendorModel(1L)));
+            taxiTripsModel.setPaymentTypeModel(paymentTypeRepository.findById(1L).orElse(new PaymentTypeModel(1L)));
 
-        taxiTripsRepository.save(taxiTripsModel);
+            taxiTripsRepository.save(taxiTripsModel);
+        }
 
         return ResponseEntity.ok(new ApiResponse(true, "Parsed!"));
     };

@@ -19,4 +19,18 @@ public abstract class SimpleIDModel implements Serializable {
     public void setId(long id) {
         this.id = id;
     }
+
+    @Override
+    public int hashCode() {
+        return (int) id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        SimpleIDModel newObj = (SimpleIDModel) obj;
+        return newObj.id == this.id;
+    }
 }

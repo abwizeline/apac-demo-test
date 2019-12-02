@@ -7,6 +7,8 @@ import javax.persistence.Table;
 @Table(name = "vendors")
 public class VendorModel extends SimpleIDModel{
 
+    static final long serialVersionUID = 2L;
+
     public VendorModel(){}
     public VendorModel(long id) {
         super(id);

@@ -5,11 +5,12 @@ import com.apac.test.apactakehometest.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -31,6 +32,16 @@ public class AsyncService {
     TripTypeRepository tripTypeRepository;
     @Autowired
     VendorRepository vendorRepository;
+
+    // related tables
+    HashSet<TaxiModel> hashSetTaxi = new HashSet<>();
+    HashSet<VendorModel> vendorModelHashSet = new HashSet<>();
+    HashSet<RateCodeModel> rateCodeModelHashSet = new HashSet<>();
+    HashSet<PaymentTypeModel> paymentTypeModelHashSet = new HashSet<>();
+    HashSet<TripTypeModel> tripTypeModelHashSet = new HashSet<>();
+
+    // main table
+    ArrayList<TaxiTripsModel> tripsModelArrayList = new ArrayList<>();
 
     @Async("asyncExecutor")
     public CompletableFuture<String> asyncDownloadFile(String csvFileURL) {
@@ -89,10 +100,17 @@ public class AsyncService {
                     continue;
                 }
 
-                try {
+                try { // for now we just ignore incorrect data types and violation exceptions and avoid whole string
+                    hashSetTaxi.add(new TaxiModel(Long.parseLong(dataArray[0])));
+                    vendorModelHashSet.add(new VendorModel(Long.parseLong(dataArray[1])));
+                    rateCodeModelHashSet.add(new RateCodeModel(Long.parseLong(dataArray[5])));
+                    paymentTypeModelHashSet.add(new PaymentTypeModel(Long.parseLong(dataArray[18])));
+                    tripTypeModelHashSet.add(new TripTypeModel(Long.parseLong(dataArray[19])));
+
                     TaxiTripsModel taxiTripsModel = fromDataArray(dataArray);
-                    saveTaxiTrips(taxiTripsRepository, taxiTripsModel);
-                } catch (Exception ex) { // for now we just ignore incorrect data types and violation exceptions
+                    tripsModelArrayList.add(taxiTripsModel);
+
+                } catch (Exception ex) {
                 }
             }
         } catch (Exception ex) {
@@ -100,25 +118,45 @@ public class AsyncService {
             return CompletableFuture.completedFuture(false);
         }
 
+        // now one by one we save to DB
+        taxiRepository.saveAll(hashSetTaxi);
+        taxiRepository.flush();
+        vendorRepository.saveAll(vendorModelHashSet);
+        vendorRepository.flush();
+        rateCodeRepository.saveAll(rateCodeModelHashSet);
+        rateCodeRepository.flush();
+        paymentTypeRepository.saveAll(paymentTypeModelHashSet);
+        paymentTypeRepository.flush();
+        tripTypeRepository.saveAll(tripTypeModelHashSet);
+        tripTypeRepository.flush();
+
+        // final data to be saved
+        try {
+            saveTaxiTrips(taxiTripsRepository, tripsModelArrayList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // manually remove memory, do not wait garbage
+        hashSetTaxi.clear();
+        vendorModelHashSet.clear();
+        tripsModelArrayList.clear();
+        rateCodeModelHashSet.clear();
+        paymentTypeModelHashSet.clear();
+        tripTypeModelHashSet.clear();
+
         return CompletableFuture.completedFuture(true);
     }
 
     public TaxiTripsModel fromDataArray(String[] dataArray) throws ArrayIndexOutOfBoundsException, NumberFormatException {
         TaxiTripsModel taxiTripsModel = new TaxiTripsModel();
 
-        long taxiId = Long.parseLong(dataArray[0]);
-        taxiTripsModel.setTaxiModel(taxiRepository.findById(taxiId).orElse(new TaxiModel(taxiId)));
-
-        long vendorId = Long.parseLong(dataArray[1]);
-        //taxiTripsModel.setVendorModel(vendorRepository.findById(vendorId).orElse(new VendorModel(vendorId)));
-
+        taxiTripsModel.setTaxiModel(new TaxiModel(Long.parseLong(dataArray[0])));
+        taxiTripsModel.setVendorModel(new VendorModel(Long.parseLong(dataArray[1])));
         taxiTripsModel.setLpep_pickup_datetime(dataArray[2]);
         taxiTripsModel.setLpep_dropoff_datetime(dataArray[3]);
         taxiTripsModel.setStore_and_fwd_flag(dataArray[4]);
-
-        long rateCode = Long.parseLong(dataArray[5]);
-        //taxiTripsModel.setRateCodeModel(rateCodeRepository.findById(rateCode).orElse(new RateCodeModel(rateCode)));
-
+        taxiTripsModel.setRateCodeModel(new RateCodeModel(Long.parseLong(dataArray[5])));
         taxiTripsModel.setPULocationID(Long.parseLong(dataArray[6]));
         taxiTripsModel.setDOLocationID(Long.parseLong(dataArray[7]));
         taxiTripsModel.setPassenger_count(Integer.parseInt(dataArray[8]));
@@ -131,21 +169,21 @@ public class AsyncService {
         taxiTripsModel.setEhail_fee(dataArray[15]);
         taxiTripsModel.setImprovement_surcharge(Double.parseDouble(dataArray[16]));
         taxiTripsModel.setTotal_amount(Double.parseDouble(dataArray[17]));
-
-        long paymentType = Long.parseLong(dataArray[18]);
-        //taxiTripsModel.setPaymentTypeModel(paymentTypeRepository.findById(paymentType).orElse(new PaymentTypeModel(paymentType)));
-
-        long tripType = Long.parseLong(dataArray[19]);
-        //taxiTripsModel.setTripTypeModel(tripTypeRepository.findById(tripType).orElse(new TripTypeModel(tripType)));
+        taxiTripsModel.setPaymentTypeModel(new PaymentTypeModel(Long.parseLong(dataArray[18])));
+        taxiTripsModel.setTripTypeModel(new TripTypeModel(Long.parseLong(dataArray[19])));
 
         return taxiTripsModel;
     }
 
-    @Transactional
     public void saveTaxiTrips(@NotNull TaxiTripsRepository tripsRepository, @NotNull TaxiTripsModel model) throws Exception {
         if (model != null) {
             tripsRepository.saveAndFlush(model);
         }
+    }
+
+    public void saveTaxiTrips(@NotNull TaxiTripsRepository tripsRepository, @NotNull ArrayList<TaxiTripsModel> model) throws Exception{
+        tripsRepository.saveAll(model);
+        tripsRepository.flush();
     }
 
 }

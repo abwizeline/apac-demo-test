@@ -4,16 +4,13 @@ jdk: openjdk8
 script:
   - ./mvnw clean install -B
 
-# Cache Gcloud SDK between commands
 cache:
   directories:
     - "$HOME/google-cloud-sdk/"
 
-# Install services
 services:
   - docker
 
-# Set env vars
 env:
   global:
     - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/gcloud-service-key.json

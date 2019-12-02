@@ -1,4 +1,4 @@
-package com.apac.test.apactakehometest;
+package com.apac.test.apactakehometest.repository;
 
 import com.apac.test.apactakehometest.async.AsyncService;
 import com.apac.test.apactakehometest.model.TaxiTripsModel;
@@ -6,15 +6,15 @@ import com.apac.test.apactakehometest.repository.TaxiTripsRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
 @SpringBootTest
 public class TaxiTripsRepositoryTest {
 
@@ -23,6 +23,8 @@ public class TaxiTripsRepositoryTest {
 
     @Test
     public void emptyTaxiID() {
+
+        taxiTripsRepository.deleteAll();
 
         AsyncService asyncService = new AsyncService();
         try {
@@ -37,10 +39,13 @@ public class TaxiTripsRepositoryTest {
 
     @Test
     public void wrongPickupTimeFormat() {
+        taxiTripsRepository.deleteAll();
+
         AsyncService asyncService = new AsyncService();
         try {
             TaxiTripsModel taxiTripsModel = new TaxiTripsModel();
             taxiTripsModel.setLpep_pickup_datetime("01-01-2019 00:18:50");
+
             asyncService.saveTaxiTrips(taxiTripsRepository, taxiTripsModel);
         } catch (Exception ex) {
             System.out.println("Exception " + ex.getMessage());
@@ -134,7 +139,10 @@ public class TaxiTripsRepositoryTest {
     }
 
     @Test
-    public void correctInputArrayDataValid() {
+    public void correctInputArrayDataValidButNoRefferentTables() {
+
+        taxiTripsRepository.deleteAll();
+
         AsyncService asyncService = new AsyncService();
         String[] inputData = new String[]{"17083", "2"
                 , "2018-01-01 00:18:50"
@@ -170,12 +178,15 @@ public class TaxiTripsRepositoryTest {
         assertEquals(0.5D, taxiTripsModel.getExtra(), 0.0D);
 
         try {
-            asyncService.saveTaxiTrips(taxiTripsRepository, taxiTripsModel);
+            ArrayList<TaxiTripsModel> arrayList = new ArrayList<>();
+            arrayList.add(taxiTripsModel);
+
+            asyncService.saveTaxiTrips(taxiTripsRepository, arrayList);
         } catch (Exception ex) {
             System.out.println("Exception " + ex.getMessage());
         }
 
-        assertEquals(1, taxiTripsRepository.findAll().size());
+        assertEquals(0, taxiTripsRepository.findAll().size());
     }
 
 }
