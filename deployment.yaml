@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-google-cloud-deployment
+  labels:
+    app: apac-demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: apac-demo
+  template:
+    metadata:
+      labels:
+        app: apac-demo
+    # docker image name and image registry
+    # need to point to full docker registry url, in this case it's docker hub registry. we can use google registry as an alternative
+    spec:
+      containers:
+        - name: apac-demo
+          image: gcr.io/apactestdeploy/apac-demo:v1
+          ports:
+            - containerPort: 8080
+      # secrets to pull the image docker hub registry to GCP, we need to create secrets beforehand
+      # we don't need to create this if image is google registry
+      imagePullSecrets:
+        - name: regcred

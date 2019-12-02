@@ -1,0 +1,43 @@
+language: java
+jdk: oraclejdk8
+
+script:
+  - mvn test
+  - ./mvnw clean install -B
+
+# Cache Gcloud SDK between commands
+cache:
+  directories:
+    - "$HOME/google-cloud-sdk/"
+
+# Install services
+services:
+  - docker
+
+# Set env vars
+env:
+  global:
+    - GOOGLE_APPLICATION_CREDENTIALS=~/gcloud-service-key.json
+    - PROJECT_NAME_PRD=apactestdeploy
+    - CLUSTER_NAME_PRD=apac-demo-cluster
+    - CLOUDSDK_COMPUTE_ZONE=us-central1-b
+    - DOCKER_IMAGE_NAME=apac-demo
+    - KUBE_DEPLOYMENT_NAME=apac-demo
+    - KUBE_DEPLOYMENT_CONTAINER_NAME=apac-demo
+    - NODES_NUM = 3
+    - GCLOUD_MACHINE_TYPE = n1-standard-1
+
+before_deploy:
+  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+  - source /home/travis/google-cloud-sdk/path.bash.inc
+  - gcloud --quiet version
+  - gcloud --quiet components update
+  - gcloud --quiet components beta update
+  - gcloud --quiet components update kubectl
+
+deploy:
+  - provider: script
+    script: ./deploy-production.sh
+    skip_cleanup: true
+    on:
+      branch: artem-bogomaz
