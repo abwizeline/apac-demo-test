@@ -48,8 +48,6 @@ public class RestAPIController {
 
         taxiTripsRepository.save(taxiTripsModel);
 
-
-
         return ResponseEntity.ok(new ApiResponse(true, "Parsed!"));
     };
 

@@ -107,17 +107,17 @@ public class AsyncService {
         TaxiTripsModel taxiTripsModel = new TaxiTripsModel();
 
         long taxiId = Long.parseLong(dataArray[0]);
-        taxiTripsModel.setTaxiModel(taxiRepository.findById(taxiId).orElse(new TaxiModel(taxiId)));
+        //taxiTripsModel.setTaxiModel(taxiRepository.findById(taxiId).orElse(new TaxiModel(taxiId)));
 
         long vendorId = Long.parseLong(dataArray[1]);
-        taxiTripsModel.setVendorModel(vendorRepository.findById(vendorId).orElse(new VendorModel(vendorId)));
+        //taxiTripsModel.setVendorModel(vendorRepository.findById(vendorId).orElse(new VendorModel(vendorId)));
 
         taxiTripsModel.setLpep_pickup_datetime(dataArray[2]);
         taxiTripsModel.setLpep_dropoff_datetime(dataArray[3]);
         taxiTripsModel.setStore_and_fwd_flag(dataArray[4]);
 
         long rateCode = Long.parseLong(dataArray[5]);
-        taxiTripsModel.setRateCodeModel(rateCodeRepository.findById(rateCode).orElse(new RateCodeModel(rateCode)));
+        //taxiTripsModel.setRateCodeModel(rateCodeRepository.findById(rateCode).orElse(new RateCodeModel(rateCode)));
 
         taxiTripsModel.setPULocationID(Long.parseLong(dataArray[6]));
         taxiTripsModel.setDOLocationID(Long.parseLong(dataArray[7]));
@@ -133,10 +133,10 @@ public class AsyncService {
         taxiTripsModel.setTotal_amount(Double.parseDouble(dataArray[17]));
 
         long paymentType = Long.parseLong(dataArray[18]);
-        taxiTripsModel.setPaymentTypeModel(paymentTypeRepository.findById(paymentType).orElse(new PaymentTypeModel(paymentType)));
+        //taxiTripsModel.setPaymentTypeModel(paymentTypeRepository.findById(paymentType).orElse(new PaymentTypeModel(paymentType)));
 
         long tripType = Long.parseLong(dataArray[19]);
-        taxiTripsModel.setTripTypeModel(tripTypeRepository.findById(tripType).orElse(new TripTypeModel(tripType)));
+        //taxiTripsModel.setTripTypeModel(tripTypeRepository.findById(tripType).orElse(new TripTypeModel(tripType)));
 
         return taxiTripsModel;
     }
