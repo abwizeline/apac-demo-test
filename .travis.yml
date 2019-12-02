@@ -39,4 +39,4 @@ deploy:
     script: ./deploy-production.sh
     skip_cleanup: true
     on:
-      branch: artem-bogomaz
+      branch: master
