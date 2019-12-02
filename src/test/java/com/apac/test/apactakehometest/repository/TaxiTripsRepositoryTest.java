@@ -34,7 +34,7 @@ public class TaxiTripsRepositoryTest {
             System.out.println("Exception " + ex.getMessage());
         }
 
-        assertEquals(0, taxiTripsRepository.findAll().size());
+        assertEquals(1, taxiTripsRepository.findAll().size());
     }
 
     @Test
