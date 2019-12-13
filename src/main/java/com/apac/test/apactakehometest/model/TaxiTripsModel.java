@@ -13,13 +13,7 @@ public class TaxiTripsModel extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @ManyToOne(cascade = {CascadeType.MERGE}) // this fields my be added before inserting to this table
-    @JoinColumn(name = "TaxiID", referencedColumnName = "id")
-    TaxiModel taxiModel;
-
-    @NotNull(message = "Please enter pick up time")
-    @Convert(converter = DateConverter.class)
-    @Column(nullable = false)
+    long taxiModel;
     String lpep_pickup_datetime;
 
     @Convert(converter = DateConverter.class)
@@ -28,10 +22,7 @@ public class TaxiTripsModel extends DateAudit {
     @Size(max = 40)
     String store_and_fwd_flag;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "RatecodeID")
-    RateCodeModel rateCodeModel;
-
+    long rateCodeModel;
     @NotNull(message = "Please enter PU Location")
     long PULocationID;
     @NotNull(message = "Please enter DO Location")
@@ -47,17 +38,9 @@ public class TaxiTripsModel extends DateAudit {
     double improvement_surcharge = 0.0D;
     double total_amount = 0.0D;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "payment_type")
-    PaymentTypeModel paymentTypeModel;
-
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "trip_type")
-    TripTypeModel tripTypeModel;
-
-    @ManyToOne(cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "VendorID")
-    VendorModel vendorModel;
+    long paymentTypeModel;
+    long tripTypeModel;
+    long vendorModel;
 
     public TaxiTripsModel() {
     }
