@@ -114,8 +114,8 @@ public class RestApiControllerTest extends AbstractTest {
         assertTrue(taxiTripsModel.getVendorID() == 2);
         assertTrue(taxiTripsModel.getStore_and_fwd_flag().equalsIgnoreCase("N"));
         assertTrue(taxiTripsModel.getRatecodeID() == 1);
-        assertTrue(taxiTripsModel.getPULocationID() == 255);
-        assertTrue(taxiTripsModel.getDOLocationID() == 255);
+        assertTrue(taxiTripsModel.getPulocationID() == 255);
+        assertTrue(taxiTripsModel.getDolocationID() == 255);
         assertTrue(taxiTripsModel.getPassenger_count() == 1);
         assertTrue(taxiTripsModel.getTrip_distance() == 0.03D);
         assertTrue(taxiTripsModel.getFare_amount() == -3);

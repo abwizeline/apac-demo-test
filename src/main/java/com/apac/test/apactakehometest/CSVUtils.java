@@ -19,7 +19,7 @@ public class CSVUtils {
 
     public <T> CSVUtils(Class<T> clazz, @NotNull String header, @NotNull char commaDelimiter){
         mSchema = CsvSchema.emptySchema()
-                .withoutHeader()
+                .withHeader()
                 .withColumnSeparator(commaDelimiter);
 
         mReader = mapper
@@ -31,11 +31,11 @@ public class CSVUtils {
                 .withoutAttribute("id")
                 .with(mSchema);
 
-        this.mHeader = "taxiID,vendorID,lpep_pickup_datetime,lpep_dropoff_datetime,store_and_fwd_flag,ratecodeID,pulocationID,dolocationID,passenger_count,trip_distance,fare_amount,extra,mta_tax,tip_amount,tolls_amount,ehail_fee,improvement_surcharge,total_amount,payment_type,trip_type";
+        this.mHeader = header;
     }
 
     public <T> T read(String src) throws IOException {
-        // return mReader.<T>readValue(src.getBytes());
+        // not a sharp solution, but CSVMapper can't understand what fields to parse
         return mReader.<T>readValue((mHeader + "\n" + src).getBytes());
     }
 }

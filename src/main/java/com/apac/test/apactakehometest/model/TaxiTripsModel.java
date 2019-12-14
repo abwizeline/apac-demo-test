@@ -1,5 +1,7 @@
 package com.apac.test.apactakehometest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +11,8 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize
 @Entity
 @Table(name = "taxiTrips")
 @Getter
@@ -20,9 +23,11 @@ public class TaxiTripsModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long TaxiID;
+    @JsonProperty("TaxiID")
+    private long taxiID;
 
-    private long VendorID;
+    @JsonProperty("VendorID")
+    private long vendorID;
 
     @Convert(converter = DateConverter.class)
     private String lpep_pickup_datetime;
@@ -33,32 +38,35 @@ public class TaxiTripsModel implements Serializable {
     @Size(max = 40)
     private String store_and_fwd_flag;
 
-    private long RatecodeID;
+    @JsonProperty("RatecodeID")
+    private long ratecodeID;
 
-    private long PULocationID;
+    @JsonProperty("PULocationID")
+    private long pulocationID;
 
-    private long DOLocationID;
+    @JsonProperty("DOLocationID")
+    private long dolocationID;
 
-    private int passenger_count = 0;
+    private int passenger_count;
 
-    private double trip_distance = 0.0D;
+    private double trip_distance;
 
-    private double fare_amount = 0.0D;
+    private double fare_amount;
 
-    private double extra = 0.0D;
+    private double extra;
 
-    private double mta_tax = 0.0D;
+    private double mta_tax;
 
-    private double tip_amount = 0.0D;
+    private double tip_amount;
 
-    private double tolls_amount = 0.0D;
+    private double tolls_amount;
 
     @Size(max = 40)
     private String ehail_fee;
 
-    private double improvement_surcharge = 0.0D;
+    private double improvement_surcharge;
 
-    private double total_amount = 0.0D;
+    private double total_amount;
 
     private long payment_type;
 
