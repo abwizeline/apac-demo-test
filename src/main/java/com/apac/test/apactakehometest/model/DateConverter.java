@@ -33,9 +33,7 @@ public class DateConverter implements AttributeConverter<String, Long> {
     }
 
     @Override
-    public String convertToEntityAttribute(Long l) {
-        Date date = new Date(l);
-
-        return date.toString();
+    public String convertToEntityAttribute(Long date) {
+        return new Date(date).toString();
     }
 }

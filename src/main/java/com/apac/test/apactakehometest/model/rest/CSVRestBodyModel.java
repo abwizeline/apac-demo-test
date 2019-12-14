@@ -5,13 +5,13 @@ import javax.validation.constraints.NotBlank;
 public class CSVRestBodyModel {
 
     @NotBlank
-    private String urlCSV;
+    private String url;
 
-    public String getUrlCSV() {
-        return urlCSV;
+    public String getUrl() {
+        return url;
     }
 
-    public void setUrlCSV(String urlCSV) {
-        this.urlCSV = urlCSV;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

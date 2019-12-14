@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class WhiteLabelController {
     @GetMapping("/")
     public ResponseEntity<?> whiteLabel(){
-        return ResponseEntity.ok(new ApiResponse(true, "I am here!"));
+        return ResponseEntity.ok(new ApiResponse("no url",true, "I am here!"));
     }
 }

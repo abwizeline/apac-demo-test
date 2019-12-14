@@ -1,8 +1,10 @@
 package com.apac.test.apactakehometest.async;
 
-import com.apac.test.apactakehometest.model.*;
-import com.apac.test.apactakehometest.repository.*;
+import com.apac.test.apactakehometest.CSVUtils;
+import com.apac.test.apactakehometest.model.TaxiTripsModel;
+import com.apac.test.apactakehometest.repository.TaxiTripsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -10,180 +12,115 @@ import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.concurrent.CompletableFuture;
+
+import static com.apac.test.apactakehometest.ApacTakeHomeTestApplication.LOGGER;
 
 @Service
 public class AsyncService {
 
-    private static final String COMMA_DELIMITER = ",";
-    private static final int FILE_COLUMNS_COUNT = 20;
-    private static final String EXTENSION = ".csv";
+    @Value("${com.apac.file_extension}")
+    private String mFileExtension;
+
+    @Value("${com.apac.byte_buffer}")
+    private int mByteBufferSize;
+
+    @Value("${com.apac.comma_delimiter}")
+    private String mCommaDelimiter;
 
     @Autowired
-    TaxiTripsRepository taxiTripsRepository;
-    @Autowired
-    PaymentTypeRepository paymentTypeRepository;
-    @Autowired
-    RateCodeRepository rateCodeRepository;
-    @Autowired
-    TaxiRepository taxiRepository;
-    @Autowired
-    TripTypeRepository tripTypeRepository;
-    @Autowired
-    VendorRepository vendorRepository;
+    private TaxiTripsRepository mTaxiTripsRepository;
 
-    // related tables
-    HashSet<TaxiModel> hashSetTaxi = new HashSet<>();
-    HashSet<VendorModel> vendorModelHashSet = new HashSet<>();
-    HashSet<RateCodeModel> rateCodeModelHashSet = new HashSet<>();
-    HashSet<PaymentTypeModel> paymentTypeModelHashSet = new HashSet<>();
-    HashSet<TripTypeModel> tripTypeModelHashSet = new HashSet<>();
+    @Async(AsyncConfiguration.mAsyncThreadName)
+    public CompletableFuture<Boolean> asyncParseFileUrl(@NotNull String csvUrl) {
 
-    // main table
-    ArrayList<TaxiTripsModel> tripsModelArrayList = new ArrayList<>();
-
-    @Async("asyncExecutor")
-    public CompletableFuture<String> asyncDownloadFile(String csvFileURL) {
-
-        if (!csvFileURL.endsWith(EXTENSION)) {
-            return CompletableFuture.completedFuture(null);
-        }
-        String tempDir = System.getProperty("java.io.tmpdir");
-        if (!tempDir.endsWith("/") && !tempDir.endsWith("\\")) {
-            tempDir = tempDir + "/";
-        }
-
-        String FILE_NAME = tempDir + System.currentTimeMillis() + EXTENSION;
-        File csvFile = new File(FILE_NAME);
-        if (!csvFile.exists()) {
-            try {
-                csvFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return CompletableFuture.completedFuture(null);
-            }
-        }
-        try (BufferedInputStream in = new BufferedInputStream(new URL(csvFileURL).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(FILE_NAME)) {
-            byte dataBuffer[] = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        return CompletableFuture.completedFuture(csvFile.getAbsolutePath());
-    }
-
-    @Async("asyncExecutor")
-    public CompletableFuture<Boolean> insertData(File csvFile) {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(csvFile.getAbsolutePath()));
-            String line;
-            int firstLineCounter = 0;
-
-            while ((line = br.readLine()) != null) {
-                if (line == null || line.isEmpty()) {
-                    continue;
-                }
-
-                String[] dataArray = line.split(COMMA_DELIMITER);
-                if (firstLineCounter == 0) { // first line always headers in csv
-                    if (dataArray.length < FILE_COLUMNS_COUNT) {
-                        return CompletableFuture.completedFuture(false);
-                    }
-
-                    firstLineCounter++;
-                    continue;
-                }
-
-                try { // for now we just ignore incorrect data types and violation exceptions and avoid whole string
-                    hashSetTaxi.add(new TaxiModel(Long.parseLong(dataArray[0])));
-                    vendorModelHashSet.add(new VendorModel(Long.parseLong(dataArray[1])));
-                    rateCodeModelHashSet.add(new RateCodeModel(Long.parseLong(dataArray[5])));
-                    paymentTypeModelHashSet.add(new PaymentTypeModel(Long.parseLong(dataArray[18])));
-                    tripTypeModelHashSet.add(new TripTypeModel(Long.parseLong(dataArray[19])));
-
-                    TaxiTripsModel taxiTripsModel = fromDataArray(dataArray);
-                    tripsModelArrayList.add(taxiTripsModel);
-
-                } catch (Exception ex) {
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (!csvUrl.endsWith(mFileExtension)) {
+            LOGGER.error("Not a csv file");
             return CompletableFuture.completedFuture(false);
         }
 
-        // now one by one we save to DB
-        taxiRepository.saveAll(hashSetTaxi);
-        taxiRepository.flush();
-        vendorRepository.saveAll(vendorModelHashSet);
-        vendorRepository.flush();
-        rateCodeRepository.saveAll(rateCodeModelHashSet);
-        rateCodeRepository.flush();
-        paymentTypeRepository.saveAll(paymentTypeModelHashSet);
-        paymentTypeRepository.flush();
-        tripTypeRepository.saveAll(tripTypeModelHashSet);
-        tripTypeRepository.flush();
-
-        // final data to be saved
+        ArrayList<TaxiTripsModel> tripsModels = new ArrayList<>();
         try {
-            saveTaxiTrips(taxiTripsRepository, tripsModelArrayList);
-        } catch (Exception e) {
-            e.printStackTrace();
+            tripsModels = readFromStream(new URL(csvUrl).openStream());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
         }
 
-        // manually remove memory, do not wait garbage
-        hashSetTaxi.clear();
-        vendorModelHashSet.clear();
-        tripsModelArrayList.clear();
-        rateCodeModelHashSet.clear();
-        paymentTypeModelHashSet.clear();
-        tripTypeModelHashSet.clear();
+        if (tripsModels.size() > 0) {
+            saveTaxiTrips(mTaxiTripsRepository, tripsModels);
+        } else {
+            LOGGER.error("No data");
+            return CompletableFuture.completedFuture(false);
+        }
 
         return CompletableFuture.completedFuture(true);
     }
 
-    public TaxiTripsModel fromDataArray(String[] dataArray) throws ArrayIndexOutOfBoundsException, NumberFormatException {
-        TaxiTripsModel taxiTripsModel = new TaxiTripsModel();
+    public ArrayList<TaxiTripsModel> readFromStream(InputStream inputStream) {
 
-        taxiTripsModel.setTaxiModel(new TaxiModel(Long.parseLong(dataArray[0])));
-        taxiTripsModel.setVendorModel(new VendorModel(Long.parseLong(dataArray[1])));
-        taxiTripsModel.setLpep_pickup_datetime(dataArray[2]);
-        taxiTripsModel.setLpep_dropoff_datetime(dataArray[3]);
-        taxiTripsModel.setStore_and_fwd_flag(dataArray[4]);
-        taxiTripsModel.setRateCodeModel(new RateCodeModel(Long.parseLong(dataArray[5])));
-        taxiTripsModel.setPULocationID(Long.parseLong(dataArray[6]));
-        taxiTripsModel.setDOLocationID(Long.parseLong(dataArray[7]));
-        taxiTripsModel.setPassenger_count(Integer.parseInt(dataArray[8]));
-        taxiTripsModel.setTrip_distance(Double.parseDouble(dataArray[9]));
-        taxiTripsModel.setFare_amount(Double.parseDouble(dataArray[10]));
-        taxiTripsModel.setExtra(Double.parseDouble(dataArray[11]));
-        taxiTripsModel.setMta_tax(Double.parseDouble(dataArray[12]));
-        taxiTripsModel.setTip_amount(Double.parseDouble(dataArray[13]));
-        taxiTripsModel.setTolls_amount(Double.parseDouble(dataArray[14]));
-        taxiTripsModel.setEhail_fee(dataArray[15]);
-        taxiTripsModel.setImprovement_surcharge(Double.parseDouble(dataArray[16]));
-        taxiTripsModel.setTotal_amount(Double.parseDouble(dataArray[17]));
-        taxiTripsModel.setPaymentTypeModel(new PaymentTypeModel(Long.parseLong(dataArray[18])));
-        taxiTripsModel.setTripTypeModel(new TripTypeModel(Long.parseLong(dataArray[19])));
+        if (mByteBufferSize == 0) {
+            mByteBufferSize = 1024;
+        }
 
-        return taxiTripsModel;
+        if(mCommaDelimiter == null){
+            mCommaDelimiter = ",";
+        }
+
+        ArrayList<TaxiTripsModel> taxiTripsModels = new ArrayList<>();
+        try (BufferedInputStream in = new BufferedInputStream(inputStream);) {
+
+            byte[] dataBuffer = new byte[mByteBufferSize];
+            int bytesRead;
+
+            String rowData = "";
+            CSVUtils csvUtils = null;
+
+            synchronized (in) {
+                while ((bytesRead = in.read(dataBuffer, 0, mByteBufferSize)) != -1) {
+
+                    String data = new String(dataBuffer);
+
+                    for (int i = 0; i < bytesRead; i++) {
+                        String currSymbol = String.valueOf(data.charAt(i));
+                        if (currSymbol.equalsIgnoreCase(System.lineSeparator())) {
+
+                            if (csvUtils == null) { // we know CSV first line is header
+                                csvUtils = new CSVUtils(TaxiTripsModel.class, rowData, mCommaDelimiter.charAt(0));
+                                rowData = "";
+                                continue;
+                            }
+
+                            if (!rowData.isEmpty()) {
+                                try {
+                                    TaxiTripsModel taxiTripsModel = csvUtils.read(rowData);
+                                    taxiTripsModels.add(taxiTripsModel);
+                                } catch (Exception ex) { // in any case if something wrong with data we will ignore it and process with next row
+                                    LOGGER.error(ex.getMessage(), ex);
+                                }
+                            }
+
+                            rowData = "";
+                            continue;
+                        }
+                        rowData += currSymbol;
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+
+        return taxiTripsModels;
     }
 
-    public void saveTaxiTrips(@NotNull TaxiTripsRepository tripsRepository, @NotNull TaxiTripsModel model) throws Exception {
+    public void saveTaxiTrips(@NotNull TaxiTripsRepository tripsRepository, @NotNull TaxiTripsModel model) {
         if (model != null) {
             tripsRepository.saveAndFlush(model);
         }
     }
 
-    public void saveTaxiTrips(@NotNull TaxiTripsRepository tripsRepository, @NotNull ArrayList<TaxiTripsModel> model) throws Exception{
+    public void saveTaxiTrips(@NotNull TaxiTripsRepository tripsRepository, @NotNull ArrayList<TaxiTripsModel> model) {
         tripsRepository.saveAll(model);
         tripsRepository.flush();
     }
-
 }
