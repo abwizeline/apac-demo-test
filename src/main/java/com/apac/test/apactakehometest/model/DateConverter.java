@@ -1,5 +1,7 @@
 package com.apac.test.apactakehometest.model;
 
+import com.apac.test.apactakehometest.ApacTakeHomeTestApplication;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.text.SimpleDateFormat;
@@ -21,9 +23,14 @@ public class DateConverter implements AttributeConverter<String, Long> {
         Date date;
 
         try {
+            ApacTakeHomeTestApplication.LOGGER.debug("before conversion: " + dateString);
+
             SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
             dateFormat.setTimeZone(TimeZone.getTimeZone("GMT-04:00")); // convert to EDT
             date = dateFormat.parse(dateString);
+
+            ApacTakeHomeTestApplication.LOGGER.debug("after conversion: " + date);
+
         }catch (Exception ex){
             ex.printStackTrace();
             return 0L;
