@@ -28,7 +28,7 @@ public class TaxiTripsRepositoryTest {
         AsyncService asyncService = new AsyncService();
         try {
             TaxiTripsModel taxiTripsModel = new TaxiTripsModel();
-            taxiTripsModel.setLpep_pickup_datetime("2019-01-01 00:18:50");
+            taxiTripsModel.setLpep_pickup_datetime("2018-01-01 00:18:50");
 
             asyncService.saveTaxiTrips(taxiTripsRepository, taxiTripsModel);
         } catch (Exception ex) {
@@ -36,7 +36,7 @@ public class TaxiTripsRepositoryTest {
             assertFalse(ex.getMessage(), true);
         }
         assertEquals(1, taxiTripsRepository.findAll().size());
-        assertEquals("Mon Dec 31 04:18:50 GMT 2018", taxiTripsRepository.findAll().get(0).getLpep_pickup_datetime());
+        assertEquals("Mon Jan 01 00:18:50 GMT 2018", taxiTripsRepository.findAll().get(0).getLpep_pickup_datetime());
         assertEquals(defaultDateStr, taxiTripsRepository.findAll().get(0).getLpep_dropoff_datetime());
     }
 

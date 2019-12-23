@@ -22,7 +22,7 @@ public class DateConverter implements AttributeConverter<String, Long> {
 
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
-            dateFormat.setTimeZone(TimeZone.getTimeZone("GMT-04:00")); // convert to EDT
+            dateFormat.setTimeZone(TimeZone.getTimeZone("EDT")); // convert to EDT
             date = dateFormat.parse(dateString);
         }catch (Exception ex){
             ex.printStackTrace();
