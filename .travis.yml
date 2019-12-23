@@ -4,6 +4,9 @@ jdk: openjdk8
 script:
   - ./mvnw clean install -B
 
+before_install:
+  - export TZ=GMT
+
 cache:
   directories:
     - "$HOME/google-cloud-sdk/"
