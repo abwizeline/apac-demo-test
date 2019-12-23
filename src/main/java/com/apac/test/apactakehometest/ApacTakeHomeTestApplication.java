@@ -19,7 +19,7 @@ public class ApacTakeHomeTestApplication {
 
     @PostConstruct
     public void init() {
-        TimeZone.setDefault(TimeZone.getTimeZone("EDT"));
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
     }
 
 }
