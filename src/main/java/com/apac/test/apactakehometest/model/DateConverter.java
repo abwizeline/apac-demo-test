@@ -19,6 +19,7 @@ public class DateConverter implements AttributeConverter<String, Long> {
 
     @Override
     public Long convertToDatabaseColumn(String dateString) {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 
         if(dateString == null || dateString.isEmpty()){
             return 0L;
