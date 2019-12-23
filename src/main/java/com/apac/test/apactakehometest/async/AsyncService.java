@@ -1,6 +1,6 @@
 package com.apac.test.apactakehometest.async;
 
-import com.apac.test.apactakehometest.CSVUtils;
+import com.apac.test.apactakehometest.CSVReader;
 import com.apac.test.apactakehometest.model.TaxiTripsModel;
 import com.apac.test.apactakehometest.repository.TaxiTripsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +73,7 @@ public class AsyncService {
             int bytesRead;
 
             String rowData = "";
-            CSVUtils csvUtils = null;
+            CSVReader csvReader = null;
 
             synchronized (in) {
                 while ((bytesRead = in.read(dataBuffer, 0, mByteBufferSize)) != -1) {
@@ -84,15 +84,15 @@ public class AsyncService {
                         String currSymbol = String.valueOf(data.charAt(i));
                         if (currSymbol.equalsIgnoreCase(System.lineSeparator())) {
 
-                            if (csvUtils == null) { // we know CSV first line is header
-                                csvUtils = new CSVUtils(TaxiTripsModel.class, rowData, mCommaDelimiter.charAt(0));
+                            if (csvReader == null) { // we know CSV first line is header
+                                csvReader = new CSVReader(TaxiTripsModel.class, rowData, mCommaDelimiter.charAt(0));
                                 rowData = "";
                                 continue;
                             }
 
                             if (!rowData.isEmpty()) {
                                 try {
-                                    TaxiTripsModel taxiTripsModel = csvUtils.read(rowData);
+                                    TaxiTripsModel taxiTripsModel = csvReader.read(rowData);
                                     taxiTripsModels.add(taxiTripsModel);
                                 } catch (Exception ex) { // in any case if something wrong with data we will ignore it and process with next row
                                     LOGGER.error(ex.getMessage(), ex);

@@ -10,14 +10,15 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 @Getter
-public class CSVUtils {
-    private static final CsvMapper mapper = new CsvMapper();
+public class CSVReader {
 
     private CsvSchema mSchema;
     private String mHeader;
     private ObjectReader mReader;
 
-    public <T> CSVUtils(Class<T> clazz, @NotNull String header, @NotNull char commaDelimiter){
+    public <T> CSVReader(Class<T> clazz, @NotNull String header, @NotNull char commaDelimiter){
+
+        CsvMapper mapper = new CsvMapper();
         mSchema = CsvSchema.emptySchema()
                 .withHeader()
                 .withColumnSeparator(commaDelimiter);

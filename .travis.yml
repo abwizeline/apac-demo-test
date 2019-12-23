@@ -13,7 +13,7 @@ services:
 
 env:
   global:
-    - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/gcloud-service-key.json
+    - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/gcloud-service-key.json.enc
     - PROJECT_NAME_PRD=apactestdeploy
     - CLUSTER_NAME_PRD=apac-demo
     - CLOUDSDK_COMPUTE_ZONE=us-central1-b
