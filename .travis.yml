@@ -5,7 +5,7 @@ script:
   - ./mvnw clean install -B
 
 before_install:
-  - export TZ=GMT
+  - export TZ=Etc/GMT
 
 cache:
   directories:
