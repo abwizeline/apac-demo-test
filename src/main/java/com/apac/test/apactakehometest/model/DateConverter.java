@@ -11,7 +11,7 @@ import java.util.TimeZone;
 @Converter
 public class DateConverter implements AttributeConverter<String, Long> {
 
-    public final static String DATE_TIME_FORMAT = "YYYY-MM-DD kk:mm:ss";
+    public final static String DATE_TIME_FORMAT = "yyyy-MM-dd kk:mm:ss";
 
     @Override
     public Long convertToDatabaseColumn(String dateString) {
