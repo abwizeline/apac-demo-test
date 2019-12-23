@@ -36,7 +36,7 @@ public class TaxiTripsRepositoryTest {
             assertFalse(ex.getMessage(), true);
         }
         assertEquals(1, taxiTripsRepository.findAll().size());
-        assertEquals("Mon Jan 01 00:18:50 UTC 2018", taxiTripsRepository.findAll().get(0).getLpep_pickup_datetime());
+        assertEquals("Mon Jan 01 04:18:50 UTC 2018", taxiTripsRepository.findAll().get(0).getLpep_pickup_datetime());
         assertEquals(defaultDateStr, taxiTripsRepository.findAll().get(0).getLpep_dropoff_datetime());
     }
 
