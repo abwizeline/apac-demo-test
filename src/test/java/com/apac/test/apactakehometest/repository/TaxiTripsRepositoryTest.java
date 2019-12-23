@@ -16,7 +16,7 @@ import static org.junit.Assert.assertFalse;
 @SpringBootTest
 public class TaxiTripsRepositoryTest {
 
-    private final String defaultDateStr = "Thu Jan 01 00:00:00 GMT 1970";
+    private final String defaultDateStr = "Thu Jan 01 00:00:00 UTC 1970";
 
     @Autowired
     TaxiTripsRepository taxiTripsRepository;
@@ -36,7 +36,7 @@ public class TaxiTripsRepositoryTest {
             assertFalse(ex.getMessage(), true);
         }
         assertEquals(1, taxiTripsRepository.findAll().size());
-        assertEquals("Mon Jan 01 00:18:50 GMT 2018", taxiTripsRepository.findAll().get(0).getLpep_pickup_datetime());
+        assertEquals("Mon Jan 01 00:18:50 UTC 2018", taxiTripsRepository.findAll().get(0).getLpep_pickup_datetime());
         assertEquals(defaultDateStr, taxiTripsRepository.findAll().get(0).getLpep_dropoff_datetime());
     }
 
