@@ -4,12 +4,8 @@ import com.apac.test.apactakehometest.ApacTakeHomeTestApplication;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 @Converter
@@ -30,11 +26,10 @@ public class DateConverter implements AttributeConverter<String, Long> {
             ApacTakeHomeTestApplication.LOGGER.debug("before conversion: " + dateString);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
-            // dateFormat.setTimeZone(TimeZone.getTimeZone("GMT-04:00")); // convert to EDT
-            dateFormat.setTimeZone(TimeZone.getDefault());
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             date = dateFormat.parse(dateString);
 
-            ApacTakeHomeTestApplication.LOGGER.debug("after conversion: " + date + " timezone " + TimeZone.getDefault());
+            ApacTakeHomeTestApplication.LOGGER.debug("after conversion: " + date + " timezone " + TimeZone.getTimeZone("UTC"));
 
         }catch (Exception ex){
             ex.printStackTrace();
