@@ -21,10 +21,10 @@ public class TaxiTripsModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @JsonProperty("TaxiID")
-    private long taxiID;
+    private Long taxiID;
 
     @JsonProperty("VendorID")
     private long vendorID;
@@ -39,38 +39,38 @@ public class TaxiTripsModel implements Serializable {
     private String store_and_fwd_flag;
 
     @JsonProperty("RatecodeID")
-    private long ratecodeID;
+    private Long ratecodeID;
 
     @JsonProperty("PULocationID")
-    private long pulocationID;
+    private Long pulocationID;
 
     @JsonProperty("DOLocationID")
-    private long dolocationID;
+    private Long dolocationID;
 
-    private int passenger_count;
+    private Integer passenger_count;
 
-    private double trip_distance;
+    private Double trip_distance;
 
-    private double fare_amount;
+    private Double fare_amount;
 
-    private double extra;
+    private Double extra;
 
-    private double mta_tax;
+    private Double mta_tax;
 
-    private double tip_amount;
+    private Double tip_amount;
 
-    private double tolls_amount;
+    private Double tolls_amount;
 
     @Size(max = 40)
     private String ehail_fee;
 
-    private double improvement_surcharge;
+    private Double improvement_surcharge;
 
-    private double total_amount;
+    private Double total_amount;
 
-    private long payment_type;
+    private Long payment_type;
 
-    private long trip_type;
+    private Long trip_type;
 
     public TaxiTripsModel() {
     }

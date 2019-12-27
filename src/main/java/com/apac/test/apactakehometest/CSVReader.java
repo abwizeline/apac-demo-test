@@ -36,7 +36,7 @@ public class CSVReader {
     }
 
     public <T> T read(String src) throws IOException {
-        // not a sharp solution, but CSVMapper can't understand what fields to parse
+        // not a sharp solution, but CSVMapper can't understand what fields to parser
         return mReader.<T>readValue((mHeader + "\n" + src).getBytes());
     }
 }

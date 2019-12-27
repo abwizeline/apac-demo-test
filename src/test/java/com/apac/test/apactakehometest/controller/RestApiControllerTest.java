@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 public class RestApiControllerTest extends AbstractTest {
 
-    final String uri = "/v1/csv/parse";
+    final String uri = "/v1/csv/parser";
 
     @Override
     @Before

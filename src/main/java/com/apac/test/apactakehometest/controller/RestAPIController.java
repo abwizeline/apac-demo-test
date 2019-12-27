@@ -25,8 +25,8 @@ public class RestAPIController {
     @Autowired
     private AsyncService mAsyncService;
 
-    @PostMapping("parse")
-    public ResponseEntity<?> parse(@Valid @RequestBody CSVRestBodyModel csvRestBodyModel) {
+    @PostMapping("parser")
+    public ResponseEntity<?> parser(@Valid @RequestBody CSVRestBodyModel csvRestBodyModel) {
 
         LOGGER.debug("Start time file download " + new Date(System.currentTimeMillis()));
 
