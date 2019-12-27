@@ -29,14 +29,20 @@ public class TaxiTripsModel implements Serializable {
     @JsonProperty("VendorID")
     private long vendorID;
 
+    @Column(name = "lpep_pickup_datetime")
+    @JsonProperty("lpep_pickup_datetime")
     @Convert(converter = DateConverter.class)
-    private String lpep_pickup_datetime;
+    private String lpepPickupDatetime;
 
+    @Column(name = "lpep_dropoff_datetime")
+    @JsonProperty("lpep_dropoff_datetime")
     @Convert(converter = DateConverter.class)
-    private String lpep_dropoff_datetime;
+    private String lpepDropoffDatetime;
 
+    @Column(name = "store_and_fwd_flag")
+    @JsonProperty("store_and_fwd_flag")
     @Size(max = 40)
-    private String store_and_fwd_flag;
+    private String storeAndFwdFlag;
 
     @JsonProperty("RatecodeID")
     private Long ratecodeID;
@@ -47,30 +53,52 @@ public class TaxiTripsModel implements Serializable {
     @JsonProperty("DOLocationID")
     private Long dolocationID;
 
-    private Integer passenger_count;
+    @Column(name = "passenger_count")
+    @JsonProperty("passenger_count")
+    private Integer passengerCount;
 
-    private Double trip_distance;
+    @Column(name = "trip_distance")
+    @JsonProperty("trip_distance")
+    private Double tripDistance;
 
-    private Double fare_amount;
+    @Column(name = "fare_amount")
+    @JsonProperty("fare_amount")
+    private Double fareAmount;
 
     private Double extra;
 
-    private Double mta_tax;
+    @Column(name = "mta_tax")
+    @JsonProperty("mta_tax")
+    private Double mtaTax;
 
-    private Double tip_amount;
+    @Column(name = "tip_amount")
+    @JsonProperty("tip_amount")
+    private Double tipAmount;
 
-    private Double tolls_amount;
+    @Column(name = "tolls_amount")
+    @JsonProperty("tolls_amount")
+    private Double tollsAmount;
 
+    @Column(name = "ehail_fee")
+    @JsonProperty("ehail_fee")
     @Size(max = 40)
-    private String ehail_fee;
+    private String ehailFee;
 
-    private Double improvement_surcharge;
+    @Column(name = "improvement_surcharge")
+    @JsonProperty("improvement_surcharge")
+    private Double improvementSurcharge;
 
-    private Double total_amount;
+    @Column(name = "total_amount")
+    @JsonProperty("total_amount")
+    private Double totalAmount;
 
-    private Long payment_type;
+    @Column(name = "payment_type")
+    @JsonProperty("payment_type")
+    private Long paymentType;
 
-    private Long trip_type;
+    @Column(name = "trip_type")
+    @JsonProperty("trip_type")
+    private Long tripType;
 
     public TaxiTripsModel() {
     }

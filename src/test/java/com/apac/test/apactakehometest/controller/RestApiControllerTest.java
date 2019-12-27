@@ -112,22 +112,22 @@ public class RestApiControllerTest extends AbstractTest {
 
         assertTrue(taxiTripsModel.getTaxiID() == 13185);
         assertTrue(taxiTripsModel.getVendorID() == 2);
-        assertTrue(taxiTripsModel.getStore_and_fwd_flag().equalsIgnoreCase("N"));
+        assertTrue(taxiTripsModel.getStoreAndFwdFlag().equalsIgnoreCase("N"));
         assertTrue(taxiTripsModel.getRatecodeID() == 1);
         assertTrue(taxiTripsModel.getPulocationID() == 255);
         assertTrue(taxiTripsModel.getDolocationID() == 255);
-        assertTrue(taxiTripsModel.getPassenger_count() == 1);
-        assertTrue(taxiTripsModel.getTrip_distance() == 0.03D);
-        assertTrue(taxiTripsModel.getFare_amount() == -3);
+        assertTrue(taxiTripsModel.getPassengerCount() == 1);
+        assertTrue(taxiTripsModel.getTripDistance() == 0.03D);
+        assertTrue(taxiTripsModel.getFareAmount() == -3);
         assertTrue(taxiTripsModel.getExtra() == -0.5D);
-        assertTrue(taxiTripsModel.getMta_tax() == -0.5D);
-        assertTrue(taxiTripsModel.getTip_amount() == 0);
-        assertTrue(taxiTripsModel.getTolls_amount() == 0);
-        assertTrue(taxiTripsModel.getEhail_fee().isEmpty());
-        assertTrue(taxiTripsModel.getImprovement_surcharge() == -0.3D);
-        assertTrue(taxiTripsModel.getTotal_amount() == -4.3D);
-        assertTrue(taxiTripsModel.getPayment_type() == 3);
-        assertTrue(taxiTripsModel.getTrip_type() == 1);
+        assertTrue(taxiTripsModel.getMtaTax() == -0.5D);
+        assertTrue(taxiTripsModel.getTipAmount() == 0);
+        assertTrue(taxiTripsModel.getTollsAmount() == 0);
+        assertTrue(taxiTripsModel.getEhailFee().isEmpty());
+        assertTrue(taxiTripsModel.getImprovementSurcharge() == -0.3D);
+        assertTrue(taxiTripsModel.getTotalAmount() == -4.3D);
+        assertTrue(taxiTripsModel.getPaymentType() == 3);
+        assertTrue(taxiTripsModel.getTripType() == 1);
     }
 
     @Test
