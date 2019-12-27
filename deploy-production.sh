@@ -21,9 +21,9 @@ gcloud --quiet config set compute/zone ${CLOUDSDK_COMPUTE_ZONE}
 ##      --machine-type $GCLOUD_MACHINE_TYPE \
 ##      --zone $CLOUDSDK_COMPUTE_ZONE
 
-gcloud config set container/use_client_certificate True
+#gcloud config set container/use_client_certificate True
 
-#gcloud --quiet container clusters get-credentials $CLUSTER_NAME_PRD
+gcloud --quiet container clusters get-credentials $CLUSTER_NAME_PRD
 gcloud docker -- push gcr.io/${PROJECT_NAME_PRD}/${DOCKER_IMAGE_NAME}:$TRAVIS_COMMIT
 
 yes | gcloud beta container images add-tag gcr.io/${PROJECT_NAME_PRD}/${DOCKER_IMAGE_NAME}:$TRAVIS_COMMIT gcr.io/${PROJECT_NAME_PRD}/${DOCKER_IMAGE_NAME}:latest
