@@ -3,13 +3,11 @@ package com.apac.test.apactakehometest.controller;
 import com.apac.test.apactakehometest.async.AsyncService;
 import com.apac.test.apactakehometest.model.rest.ApiResponse;
 import com.apac.test.apactakehometest.model.rest.CSVRestBodyModel;
+import com.apac.test.apactakehometest.repository.TaxiTripsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -52,4 +50,5 @@ public class RestAPIController {
 
         return ResponseEntity.ok(new ApiResponse(csvUrl, true, "Uploaded!"));
     }
+
 }
