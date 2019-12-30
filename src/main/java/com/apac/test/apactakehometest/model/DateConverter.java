@@ -1,12 +1,12 @@
 package com.apac.test.apactakehometest.model;
 
-import com.apac.test.apactakehometest.ApacTakeHomeTestApplication;
-
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+
+import static com.apac.test.apactakehometest.ApacTakeHomeTestApplication.LOGGER;
 
 @Converter
 public class DateConverter implements AttributeConverter<String, Long> {
@@ -27,7 +27,7 @@ public class DateConverter implements AttributeConverter<String, Long> {
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             date = dateFormat.parse(dateString);
         }catch (Exception ex){
-            ApacTakeHomeTestApplication.LOGGER.error(ex.getMessage(), ex);
+            LOGGER.error(ex.getMessage(), ex);
             return 0L;
         }
 
