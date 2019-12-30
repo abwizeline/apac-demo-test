@@ -5,6 +5,8 @@ import com.apac.test.apactakehometest.model.TaxiTripsModel;
 import com.apac.test.apactakehometest.model.rest.ApiResponse;
 import com.apac.test.apactakehometest.model.rest.CSVRestBodyModel;
 import com.apac.test.apactakehometest.repository.TaxiTripsService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,10 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static com.apac.test.apactakehometest.ApacTakeHomeTestApplication.LOGGER;
-
 @RestController
 @RequestMapping("/v1/taxitrips")
 public class TaxiTripsController {
+    private static final Logger LOGGER = LogManager.getLogger(TaxiTripsController.class);
 
     @Autowired
     private TaxiTripsService mTaxiTripsService;
@@ -82,7 +83,7 @@ public class TaxiTripsController {
     @PostMapping("import-csv")
     public ResponseEntity<?> importCsv(@Valid @RequestBody CSVRestBodyModel csvRestBodyModel) {
 
-        LOGGER.debug("Start time file download " + new Date(System.currentTimeMillis()));
+        LOGGER.info("Start time file download " + new Date(System.currentTimeMillis()));
 
         String csvUrl = csvRestBodyModel.getUrl();
 
@@ -93,11 +94,11 @@ public class TaxiTripsController {
         try {
             dataUploaded = asyncParseUrlFuture.get();
 
-            LOGGER.debug("-Stop time file download " + new Date(System.currentTimeMillis()));
+            LOGGER.info("-Stop time file download " + new Date(System.currentTimeMillis()));
         } catch (InterruptedException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.debug(e.getMessage(), e);
         } catch (ExecutionException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.debug(e.getMessage(), e);
         } finally {
             if (!dataUploaded) {
                 return new ResponseEntity(new ApiResponse(csvUrl,false, "Something goes wrong!"), HttpStatus.BAD_REQUEST);

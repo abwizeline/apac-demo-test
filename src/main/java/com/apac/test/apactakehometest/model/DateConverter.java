@@ -1,15 +1,17 @@
 package com.apac.test.apactakehometest.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static com.apac.test.apactakehometest.ApacTakeHomeTestApplication.LOGGER;
-
 @Converter
 public class DateConverter implements AttributeConverter<String, Long> {
+    private static final Logger LOGGER = LogManager.getLogger(DateConverter.class);
 
     public final static String DATE_TIME_FORMAT = "yyyy-MM-dd kk:mm:ss";
 
@@ -27,7 +29,7 @@ public class DateConverter implements AttributeConverter<String, Long> {
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             date = dateFormat.parse(dateString);
         }catch (Exception ex){
-            LOGGER.error(ex.getMessage(), ex);
+            LOGGER.debug(ex.getMessage(), ex);
             return 0L;
         }
 
