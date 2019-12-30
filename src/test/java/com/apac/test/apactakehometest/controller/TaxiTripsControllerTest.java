@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-public class RestApiControllerTest extends AbstractTest {
+public class TaxiTripsControllerTest extends AbstractTest {
 
-    final String uri = "/v1/csv/parser";
+    final String uri = "/v1/taxitrips/import-csv";
 
     @Override
     @Before

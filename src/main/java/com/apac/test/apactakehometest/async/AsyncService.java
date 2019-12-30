@@ -3,21 +3,25 @@ package com.apac.test.apactakehometest.async;
 import com.apac.test.apactakehometest.CSVReader;
 import com.apac.test.apactakehometest.model.TaxiTripsModel;
 import com.apac.test.apactakehometest.repository.TaxiTripsRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
-import static com.apac.test.apactakehometest.ApacTakeHomeTestApplication.LOGGER;
-
 @Service
 public class AsyncService {
+
+    private static final Logger LOGGER = LogManager.getLogger(AsyncService.class);
 
     @Value("${com.apac.file_extension}")
     private String mFileExtension;
@@ -43,13 +47,13 @@ public class AsyncService {
         try {
             tripsModels = readFromStream(new URL(csvUrl).openStream());
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.debug(e.getMessage(), e);
         }
 
         if (tripsModels.size() > 0) {
             saveTaxiTrips(mTaxiTripsRepository, tripsModels);
         } else {
-            LOGGER.error("No data");
+            LOGGER.debug("No data");
             return CompletableFuture.completedFuture(false);
         }
 
@@ -95,7 +99,7 @@ public class AsyncService {
                                     TaxiTripsModel taxiTripsModel = csvReader.read(rowData);
                                     taxiTripsModels.add(taxiTripsModel);
                                 } catch (Exception ex) { // in any case if something wrong with data we will ignore it and process with next row
-                                    LOGGER.error(ex.getMessage(), ex);
+                                    LOGGER.debug(ex.getMessage(), ex);
                                 }
                             }
 
@@ -107,7 +111,7 @@ public class AsyncService {
                 }
             }
         } catch (IOException ex) {
-            LOGGER.error(ex.getMessage(), ex);
+            LOGGER.debug(ex.getMessage(), ex);
         }
 
         return taxiTripsModels;
