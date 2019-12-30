@@ -2,12 +2,13 @@ package com.apac.test.apactakehometest.repository;
 
 import com.apac.test.apactakehometest.async.AsyncService;
 import com.apac.test.apactakehometest.model.TaxiTripsModel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import static com.apac.test.apactakehometest.ApacTakeHomeTestApplication.LOGGER;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -15,6 +16,7 @@ import static org.junit.Assert.assertFalse;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TaxiTripsRepositoryTest {
+    private static final Logger LOGGER = LogManager.getLogger(TaxiTripsRepositoryTest.class);
 
     private final String defaultDateStr = "Thu Jan 01 00:00:00 UTC 1970";
 
