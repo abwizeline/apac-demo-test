@@ -23,14 +23,9 @@ public class DateConverter implements AttributeConverter<String, Long> {
         Date date;
 
         try {
-            ApacTakeHomeTestApplication.LOGGER.debug("before conversion: " + dateString);
-
             SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             date = dateFormat.parse(dateString);
-
-            ApacTakeHomeTestApplication.LOGGER.debug("after conversion: " + date + " timezone " + TimeZone.getTimeZone("UTC"));
-
         }catch (Exception ex){
             ex.printStackTrace();
             return 0L;
