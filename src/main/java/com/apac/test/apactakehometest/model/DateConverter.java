@@ -27,7 +27,7 @@ public class DateConverter implements AttributeConverter<String, Long> {
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             date = dateFormat.parse(dateString);
         }catch (Exception ex){
-            ex.printStackTrace();
+            ApacTakeHomeTestApplication.LOGGER.error(ex.getMessage(), ex);
             return 0L;
         }
 
